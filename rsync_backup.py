@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 """
-Local backup script using rsync
+Backup script using rsync
 
 Uses a json configuration containing pairs of src->dest in a list of dictionaries
 
-TODO
-* incremental backups - save a batch file?
+Source and destination may be a location on a remote host or a local path.
+
+Read conf_backup_example.json to get an idea of the configuration options.
+
 """
 
 import logging
@@ -23,13 +25,36 @@ logging.basicConfig()
 logger = logging.getLogger("backup")
 logger.setLevel(logging.DEBUG)
 
+def format_locations(src, dest, direction):
+
+    # local locations - just switch on direction
+    if direction == "<":
+        return dest, src
+    else:
+        return src, dest
+
+def format_remote_locations(src, dest, direction, host, mode):
+
+    # FIXME: checks here could be a bit smarter
+    if mode == "daemon":
+        # rsync daemon module path with double colon
+        loc_string = "{}::{}"
+    else:
+        # absolute path
+        loc_string = "{}:{}"
+
+    if direction == "<":
+        return loc_string.format(host, dest), src
+    else:
+        return src, loc_string.format(host, dest)
+
 def backup(conf_path):
-    profileName = None
 
     # default command
     command = "rsync"
     config = None
     options = None
+    profileName = None
 
     # load config
     with open(conf_path, "r") as f:
@@ -59,24 +84,34 @@ def backup(conf_path):
     else:
         logger.info("skipping email")
 
-    #sys.exit()
     # call command for each item in the config
     for item in config["locations"]:
 
-        if "direction" in config and config["direction"] == "<":
-            src = item["dest"]
-            dest = item["src"]
+        if "remote_host" in config:
+            src, dest = format_remote_locations(
+                item["src"],
+                item["dest"],
+                config.get("direction", None),
+                config["remote_host"],
+                config.get("mode", None)
+            )
         else:
-            src = item["src"]
-            dest = item["dest"]
+            # local sync
+            src, dest = format_locations(
+                item["src"],
+                item["dest"],
+                config.get("direction", None)
+            )
 
-        if not os.access(src, os.R_OK):
-            logger.error("source is not readable, skipping {}... ".format(src))
-            continue
+            # currently only perform these checks for local backups
+            # FIXME: come up with better checks that would work for remote backups    
+            if not os.access(src, os.R_OK):
+                logger.error("source is not readable, skipping {}... ".format(src))
+                continue
 
-        if not os.access(dest, os.W_OK):
-            logger.error("destination {} is not writeable, skipping...".format(dest))
-            continue
+            if not os.access(dest, os.W_OK):
+                logger.error("destination {} is not writeable, skipping...".format(dest))
+                continue
 
         # make a big ol' array of stuff; mind slashes, as it makes a difference for the command's meaning
         cmd = [command] + \
@@ -95,10 +130,8 @@ def backup(conf_path):
             logger.error("transfer unsuccessful")
 
 if __name__=="__main__":
-    # set config path
     if len(sys.argv) > 1:
-        conf_path = sys.argv[1]
+        backup(sys.argv[1])
     else:
-        conf_path = "conf_backup_test.json"
-    backup(conf_path)
-
+        logger.error("Usage: {} <config_file>".format(sys.argv[0]))
+        sys.exit()
