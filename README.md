@@ -1,10 +1,10 @@
-<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
-
-# rsync_backup
+# rsync_backup.py
 
 Usage:
 
 	python rsync_backup.py <config_file>
+
+## configuration
 
 This script uses a json config with various options controlling the process.
 
@@ -53,15 +53,26 @@ Let's start with the example config:
 	}
 
 
-And a rundown of the options:
+## options
 
 * *command* - the only option at  the moment is `rsync`
 * *options* - a list of options to pass to rsync
 	* in this example we specify ssh as the remote shell, using a key called boombox-rsync-key
 	* *--log-file* - self-explanatory. Look here if things go wrong
+	* for more rsync options check `man rsync`
 * *direction* - either < or > determining the direction in which you want to move the files
 * *mail* - whether to also backup mail
 * *mail_profiles_dir* - where to look for the mail profile, e.g. `$HOME/.thunderbird`
 * *remote_host* - the remote machine to transfer to/from. Omit this option for a local backup.
 * *mode* - if `daemon` is specified, adds a double colon (::) between the hostname and path, so that the remote path is interpreted as an rsync daemon module. Otherwise the path is absolute.
 * *locations* - a list of dictionaries, each containing `src` and `dest`
+
+## how to use
+
+This script can be seen in action in [this article](http://monomon.me/protoblog/index.php/8-utils/1-setting-up-a-home-server-on-a-raspberry-pi) describing a complete setup with an rsync daemon on the server. Check [client configuration](http://monomon.me/protoblog/index.php/8-utils/2-setting-up-a-home-server-on-a-raspberry-pi-configuring-the-clients) in particular.
+
+It is easy to create per-machine config files.
+
+You can use this script to backup to local and remote directories. By specifying `remote_host` in the configuration, you would get formatted paths like `remote_host::path` in daemon mode and `remote_host:path` in normal mode (or without mode).
+
+You might want to run this script as a `cron` job. Check `man crontab` for more information.
