@@ -62,7 +62,8 @@ Let's start with the example config:
 * *command* - the only option at  the moment is `rsync`
 * *options* - a list of options to pass to rsync
 	* in this example we specify ssh as the remote shell, using a key called boombox-rsync-key
-	* *--log-file* - self-explanatory. Look here if things go wrong
+	* `--log-file` - self-explanatory. Look here if things go wrong
+	* add `--dry-run` to the options to test your configuration
 	* for more rsync options check `man rsync`
 * *direction* - either < or > determining the direction in which you want to move the files
 * *mail* - whether to also backup mail
