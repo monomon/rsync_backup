@@ -10,35 +10,48 @@ This script uses a json config with various options controlling the process.
 
 It contains source-destination pairs. Each of them is synced in a separate rsync call.
 
-Let's start with an example config:
+Let's start with the example config:
 
-		{
-			"command" : "rsync",
-			"options" : [
-				"--rsh=/usr/bin/ssh -i /home/ugabuga/.ssh/boombox-rsync-key",
-				"--log-file" : "/home/ugabuga/rsync.log",
-				"--verbose",
-				"--progress",
-				"--stats",
-				"--compress",
-				"--recursive",
-				"--perms",
-				"--times",
-				"--links"
-			],
-			"remote_host" : "192.168.1.74",
-			"mode" : "daemon",
-			"direction" : ">",
-			"mail" : false,
-			"mail_profiles_dir" : "/home/ugabuga/.thunderbird/profiles.ini",
-			"mail_dest" : "uga/userfiles"
-			"locations" :[
-				{
-					"src" : "/mnt/data/projects",
-					"dest" : "uga/projects"
-				}
-			]
-		}
+	{
+		"command" : "rsync",
+		"options" : [
+			"--rsh=/usr/bin/ssh -i /home/birdman/.ssh/mybox-homeserver-rsync",
+			"--log-file=/home/birdman/rsync.log",
+			"--port=54777",
+			"--recursive",
+			"--verbose",
+			"--progress",
+			"--stats",
+			"--perms",
+			"--times",
+			"--compress",
+			"--cvs-exclude",
+			"--exclude=\".*.swp\"",
+			"--links"
+		], 
+		"remote_host" : "raspi_server",
+		"direction" : ">",
+		"mail" : false,
+		"mail_profiles_dir" : "/home/birdman/.thunderbird",
+		"mail_dest" : "bird/userdata/",
+		"mode" : "daemon",
+		"locations" :[
+			{
+				"src" : "/mnt/data/projects",
+				"dest" : "bird/projects"
+			}, {
+				"src" : "~/.bashrc",
+				"dest" : "bird/dotfiles/"
+			}, {
+				"src" : "~/.tmux.conf",
+				"dest" : "bird/dotfiles/"
+			}, {
+				"src" : "/mnt/data/music",
+				"dest" : "music"
+			}
+		]
+	}
+
 
 And a rundown of the options:
 
