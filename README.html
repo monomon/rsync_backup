@@ -1,0 +1,47 @@
+<p><link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link></p>
+<h1>rsync_remote, a useful rsync backup script</h1>
+<p>This script uses a json config with various options controlling the process.</p>
+<p>It contains source-destination pairs. Each of them is synced in a separate rsync call.</p>
+<p>Let's start with an example config:</p>
+<pre><code>    {
+        "command" : "rsync",
+        "--log-file" : "/home/ugabuga/rsync.log",
+        "options" : [
+            "--rsh=/usr/bin/ssh -i /home/ugabuga/.ssh/boombox-rsync-key",
+            "--verbose",
+            "--progress",
+            "--stats",
+            "--compress",
+            "--recursive",
+            "--perms",
+            "--times",
+            "--links"
+        ],
+        "remote_host" : "192.168.1.74",
+        "mode" : "daemon",
+        "direction" : "&gt;",
+        "mail" : false,
+        "mail_profiles_dir" : "/home/ugabuga/.thunderbird/profiles.ini",
+        "locations" :[
+            {
+                "src" : "/mnt/data/Projects",
+                "dest" : "mon"
+            }
+        ]
+    }
+</code></pre>
+<p>And a rundown of the options:</p>
+<ul>
+<li><em>command</em> - the only option at  the moment is <code>rsync</code></li>
+<li><em>--log-file</em> - self-explanatory</li>
+<li><em>options</em> - a list of options to pass to rsync<ul>
+<li>in this example we specify ssh as the remote shell, using a key called boombox-rsync-key</li>
+</ul>
+</li>
+<li><em>direction</em> - either &lt; or &gt; determining the direction in which you want to move the files</li>
+<li><em>mail</em> - whether to also backup mail</li>
+<li><em>mail_profiles_dir</em> - where to look for the mail profile, e.g. <code>$HOME/.thunderbird</code></li>
+<li><em>remote_host</em> - the remote machine to transfer to/from</li>
+<li><em>mode</em> - if <code>daemon</code> is specified, adds a double colon (::) between the hostname and path, so that the path is interpreted as an rsync daemon module. Otherwise the path is absolute.</li>
+<li><em>locations</em> - a list of dictionaries, each containing <code>src</code> and <code>dest</code></li>
+</ul>

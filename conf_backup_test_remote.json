@@ -1,0 +1,30 @@
+{
+	"command" : "rsync",
+	"options" : [
+		"--rsh=/usr/bin/ssh -i /home/monomon/.ssh/beastest-pi-rsync",
+		"--log-file=/home/monomon/rsync.log",
+		"--port=54777",
+		"--recursive",
+		"--verbose",
+		"--progress",
+		"--stats",
+		"--perms",
+		"--times",
+		"--compress",
+		"--cvs-exclude",
+		"--exclude=\".*.swp\"",
+		"--links"
+	],
+	"remote_host" : "shisharka_server",
+	"direction" : ">",
+	"mail" : false,
+	"mail_profiles_dir" : "/home/monomon/.thunderbird",
+	"mail_dest" : "mon/userdata/",
+	"mode" : "daemon",
+	"locations" :[
+		{
+			"src" : "/mnt/data/Projects",
+			"dest" : "mon/"
+		}
+	]
+}

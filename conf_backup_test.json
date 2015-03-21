@@ -1,0 +1,22 @@
+{
+	"command" : "rsync",
+	"--log-file" : "/home/monomon/rsync.log",
+	"options" : [
+		"--recursive",
+		"--verbose",
+		"--progress",
+		"--stats",
+		"--perms",
+		"--times",
+		"--compress",
+		"--cvs-exclude",
+		"--exclude=\".*.swp\"",
+		"--links"
+	],
+	"locations" :[
+		{
+			"src" : "/mnt/data/Projects/",
+			"dest" : "/mnt/adata/backup/Projects"
+		}
+	]
+}
