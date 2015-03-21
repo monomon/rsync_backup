@@ -1,8 +1,12 @@
 # rsync_backup.py
 
+Backup script using rsync that can sync to multiple local or remote locations.
+
 Usage:
 
 	python rsync_backup.py <config_file>
+
+This script can be seen in action in [this article](http://monomon.me/protoblog/index.php/8-utils/1-setting-up-a-home-server-on-a-raspberry-pi) describing a complete setup with an rsync daemon on the server. Check [client configuration](http://monomon.me/protoblog/index.php/8-utils/2-setting-up-a-home-server-on-a-raspberry-pi-configuring-the-clients) in particular.
 
 ## configuration
 
@@ -69,10 +73,12 @@ Let's start with the example config:
 
 ## how to use
 
-This script can be seen in action in [this article](http://monomon.me/protoblog/index.php/8-utils/1-setting-up-a-home-server-on-a-raspberry-pi) describing a complete setup with an rsync daemon on the server. Check [client configuration](http://monomon.me/protoblog/index.php/8-utils/2-setting-up-a-home-server-on-a-raspberry-pi-configuring-the-clients) in particular.
-
 It is easy to create per-machine config files.
 
 You can use this script to backup to local and remote directories. By specifying `remote_host` in the configuration, you would get formatted paths like `remote_host::path` in daemon mode and `remote_host:path` in normal mode (or without mode).
 
 You might want to run this script as a `cron` job. Check `man crontab` for more information.
+
+## sky's the limit
+
+How could this tool become better? Feedback and comments are welcome.
